@@ -40,16 +40,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thepranaygupta/react-tailwind-css-starter-pack.git"
+    "url": "git+https://github.com/JatinAyoo/StudyNotion/tree/main"
   },
   "author": "Pranay Gupta",
   "bugs": {
-    "url": "https://github.com/thepranaygupta/react-tailwind-css-starter-pack/issues"
+    "url": "https://github.com/JatinAyoo/StudyNotion/tree/main/issues"
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
+    "build": "react-app-rewired build",
+    "eject": "react-app-rewired eject",
     "server": "cd server && npm run dev",
     "dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm start\" \"npm run server\""
   },
