@@ -24,8 +24,8 @@ function Template({ title, description1, description2, image, formType }) {
                 {description2}
               </span>
             </p>
-            {/* <br/>
-            {formType === "signup" ? <></> : <p className="text-richblack-100">Demo Account: demo@gmail.com <br/>Password: 123456</p>} */}
+            <br/>
+            {formType === "signup" ? <></> : <p className="text-richblack-100">Demo Account: demo@gmail.com <br/>Password: 123456</p>}
             {formType === "signup" ? <SignupForm /> : <LoginForm />}
           </div>
           <div className="relative mx-auto w-11/12 max-w-[450px] md:mx-0">
