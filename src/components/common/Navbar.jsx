@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
 import { BsChevronDown } from "react-icons/bs"
 import { useSelector } from "react-redux"
@@ -10,7 +10,6 @@ import { apiConnector } from "../../services/apiconnector"
 import { categories } from "../../services/apis"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropDown"
-import axios from "axios"
 
 function Navbar() {
   const { token } = useSelector((state) => state.auth)
@@ -20,14 +19,14 @@ function Navbar() {
 
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const menuRef = useRef(null)
 
   useEffect(() => {
     ;(async () => {
       setLoading(true)
       try {
         const res = await apiConnector("GET", categories.CATEGORIES_API)
-        // const res = await axios.get(categories.CATEGORIES_API);
-        console.log("hey" , res);
         setSubLinks(res.data.data)
       } catch (error) {
         console.log("Could not fetch Categories.", error)
@@ -36,10 +35,24 @@ function Navbar() {
     })()
   }, [])
 
-  // console.log("sub links", subLinks)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prev) => !prev)
   }
 
   return (
@@ -143,10 +156,25 @@ function Navbar() {
           )}
           {token !== null && <ProfileDropdown />}
         </div>
-        <button className="mr-4 md:hidden">
+        {/* Mobile menu button */}
+        <button className="mr-4 md:hidden" onClick={toggleMobileMenu}>
           <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
         </button>
       </div>
+      {/* Mobile dropdown menu */}
+      {isMobileMenuOpen && (
+        <div ref={menuRef} className="absolute right-0 top-14 z-10 w-60 bg-richblack-800 text-white md:hidden">
+          {token === null ? (
+            <>
+              <Link to="/login" className="block px-4 py-2" onClick={toggleMobileMenu}>Log in</Link>
+              <Link to="/signup" className="block px-4 py-2" onClick={toggleMobileMenu}>Sign up</Link>
+              {token !== null && <ProfileDropdown />}
+            </>
+          ) : (
+            <ProfileDropdown />
+          )}
+        </div>
+      )}
     </div>
   )
 }
